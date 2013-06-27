@@ -137,7 +137,7 @@ def table():
 	final_date = formatted_date.strftime('%B %e, %Y')
 	date_for_url = formatted_date.strftime('%Y%m%d')
 
-	con = MySQLdb.connect(host='localhost', user='root', passwd='', db='2013_data')
+	con = MySQLdb.connect(host='localhost', user='mfolz', passwd='abcd1234', db='2013_data')
 	cur = con.cursor()
 	cur.execute("""SELECT home_team,away_team,win_predict,prob_predict,spread_predict,
 					homescore_predict_noOT,awayscore_predict_noOT,home_win_percent,
@@ -239,7 +239,7 @@ def teamdata():
 			display_end_date = end_date.strftime('%B %e, %Y')
 			
 	
-	con = MySQLdb.connect(host='localhost', user='root', passwd='', db='2013_data')
+	con = MySQLdb.connect(host='localhost', user='mfolz', passwd='abcd1234', db='2013_data')
 	cur = con.cursor()
 	cur.execute("""SELECT team,record,L10,predict_point_diff,predict_record FROM powerrank 
 					WHERE game_date='"""+str_date+"';")	
