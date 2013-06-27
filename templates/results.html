@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>NBA GameChooser</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="../static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="../static/favicon.png">
+  </head>
+
+  <body>
+
+    <div class="mainnav navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="../">GameChooser</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="../">Home</a></li>
+              <li><a href="../about">About</a></li>
+              <li><a href="../contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+	<div class="subnav navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<ul class="nav">
+					<li class="active"><a>Viewing recommendations</a></li>
+					<li><a href="../predict">GameChooser projections</a></li>
+					<li><a href="../teamrank">GameChooser Team Rankings</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+  <div class="container">
+
+      <div class="hero-unit">
+		
+			<script>
+			$(document).ready(
+			
+			function(){	
+			$.getJSON('/table', function(data){
+				var date = data['date'];
+				var empty = data['empty'];
+				var date_url = data['date_url'];
+				var count = 0;
+
+				var $table = $('<table/>');
+				var row = "<tr><td>Home Team</td><td>Away Team</td><td>Projected Score</td><td>Start Time</td><td>GameChooser Score</td><td>NBA.com</td></tr>";
+				
+				$table.append(row)
+				
+				$.each(data, function(index,value) {
+					if (value != date && value != empty && value != date_url){
+				   	//create a row
+				   	var row_prefix = "";
+				   	var row = "";
+					if (parseFloat(value.homescore_predict)>parseFloat(value.awayscore_predict))
+					{
+						row += "<td><b>"+value.home_team+"</b> ("+value.home_record+")</td><td>"+value.away_team+" ("+value.away_record+")</td>";
+					}
+					else 
+					{
+						row += "<td>"+value.home_team+" ("+value.home_record+")</td><td><b>"+value.away_team+"</b> ("+value.away_record+")</td>";
+					}
+						row+= "<td>"+value.homescore_predict_round+"-"+value.awayscore_predict_round+"</td>";
+						row+= "<td>"+value.tipoff_time+" PM</td>";			
+					if (count == 0)
+					{
+						row+= "<td><div class="+"'"+"progress progress-info"+"'"+"><div class="+"'"+"bar"+"'"+"style="+"'"+"width: "+value.norm_watchability_rating+"%"+"'"+"></div></div>";
+						row_prefix = "<tr class="+"'"+"info"+"'"+">";
+					}
+					else if (count != 0 && parseInt(value.norm_watchability_rating) > 66)
+					{
+						row+= "<td><div class="+"'"+"progress progress-success"+"'"+"><div class="+"'"+"bar"+"'"+"style="+"'"+"width: "+value.norm_watchability_rating+"%"+"'"+"></div></div>";					
+						row_prefix = "<tr class="+"'"+"success"+"'"+">";					
+					}
+					else if (count != 0 && parseInt(value.norm_watchability_rating) <= 66 && parseInt(value.norm_watchability_rating) > 33)
+					{
+						row+= "<td><div class="+"'"+"progress progress-warning"+"'"+"><div class="+"'"+"bar"+"'"+"style="+"'"+"width: "+value.norm_watchability_rating+"%"+"'"+"></div></div>";					
+						row_prefix = "<tr class="+"'"+"warning"+"'"+">";
+					}
+					else if (count != 0 && parseInt(value.norm_watchability_rating) <= 33)
+					{
+						row+= "<td><div class="+"'"+"progress progress-danger"+"'"+"><div class="+"'"+"bar"+"'"+"style="+"'"+"width: "+value.norm_watchability_rating+"%"+"'"+"></div></div>";					
+						row_prefix = "<tr class="+"'"+"error"+"'"+">";
+					}
+				   	row += "<td><a href='http://www.nba.com/games/"+date_url+"/"+value.away_team_abbr+value.home_team_abbr+"/gameinfo.html' class='btn btn-mini'>"+value.home_team_abbr+" vs "+value.away_team_abbr+"</a></td>";
+					row +="</tr>";
+										
+					row = row_prefix+row;
+				   	
+				   	$table.append(row);
+				   	count++;}		   	
+				});
+
+				$table.addClass('table')
+				//append table to the body
+				if (empty==0){
+					$('.hero-unit').append('<p class="lead">NBA games on <b>'+date+':</b></p>') 
+					$('.hero-unit').append($table);
+					$('.hero-unit').append('<p>Projected winners appear in <b>bold</b>.  Win-loss records are in brackets.</p>');
+					$('.hero-unit').append('<p>All start times are Eastern Standard Time.</p>');
+				}
+				else {
+					$('.hero-unit').append('<p class="lead">There are no NBA games on <b>'+date+'.</b></p>') 				
+					$('.hero-unit').append('<a class="btn btn-primary" href="../">Go back</a>')
+				}
+				});				
+				}
+				);
+			
+			</script>
+      </div>
+      <hr>
+      <footer>
+        <p>&copy; Matthew Folz, Insight Data Science, 2013.</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

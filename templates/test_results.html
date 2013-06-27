@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>NBA GameChooser</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="../static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="../assets/ico/favicon.png">
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="../">GameChooser</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="../">Home</a></li>
+              <li><a href="../about">About</a></li>
+              <li><a href="../contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+   <div class="container">
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit">
+
+		<p class="lead">NBA games on <b>January 1, 2013</b></p>
+
+
+			<script>
+				var data = [{"spread_predict": 0.346911, "home_team": "Denver", "away_team": "L.A. Clippers", "home_WL": 0.53125, "homescore_predict": 100.0, "win_predict": 1, "away_WL": 0.806452, "awayscore_predict": 100.0, "watchability_rating": 0.872290975, "prob_predict": 0.613}, {"spread_predict": 7.48402, "home_team": "L.A. Lakers", "away_team": "Philadelphia", "home_WL": 0.5, "homescore_predict": 103.0, "win_predict": 1, "away_WL": 0.451613, "awayscore_predict": 96.0, "watchability_rating": 0.6935392916666667, "prob_predict": 0.565}, {"spread_predict": 9.01946, "home_team": "New York", "away_team": "Portland", "home_WL": 0.7, "homescore_predict": 106.0, "win_predict": 1, "away_WL": 0.517241, "awayscore_predict": 96.0, "watchability_rating": 0.6004899583333332, "prob_predict": 0.663}, {"spread_predict": -6.30163, "home_team": "New Orleans", "away_team": "Atlanta", "home_WL": 0.233333, "homescore_predict": 94.0, "win_predict": 0, "away_WL": 0.655172, "awayscore_predict": 99.0, "watchability_rating": 0.38641737500000006, "prob_predict": 0.24}, {"spread_predict": 0.205352, "home_team": "Washington", "away_team": "Dallas", "home_WL": 0.142857, "homescore_predict": 98.0, "win_predict": 0, "away_WL": 0.387097, "awayscore_predict": 98.0, "watchability_rating": 0.3809803666666668, "prob_predict": 0.36}, {"spread_predict": 7.58886, "home_team": "Detroit", "away_team": "Sacramento", "home_WL": 0.333333, "homescore_predict": 104.0, "win_predict": 1, "away_WL": 0.366667, "awayscore_predict": 96.0, "watchability_rating": 0.2836576666666666, "prob_predict": 0.768}]
+				var $table = $('<table/>');
+
+				$.each(data, function(index,value) {
+				   //create a row
+				   var $row = $('<tr/>');
+
+				   //create the id column
+				   $('<td/>').text(value.home_team).appendTo($row);
+
+				   //create name column
+				   $('<td/>').text(value.away_team).appendTo($row);
+
+				   //create last_name
+				   $('<td/>').text(value.homescore_predict+"-"+value.awayscore_predict).appendTo($row);
+				   $('<td/>').text(Math.round(100*value.watchability_rating)).appendTo($row);
+
+
+				   $table.append($row);
+				});
+
+				$table.addClass('table')
+				//append table to the body
+				$('.hero-unit').append($table);
+				
+			</script>
+
+		<p>Projected winner appears in <b>bold</b>.</p>
+		<p>Click on a row to get detailed analytics for the corresponding game.</p>
+
+      </div>
+
+
+
+
+      <hr>
+
+      <footer>
+        <p>&copy; Matthew Folz, Insight Data Science, 2013.</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="..bootstrap/js/jquery.js"></script>
+    <script src="..bootstrap/js/bootstrap-transition.js"></script>
+    <script src="..bootstrap/js/bootstrap-alert.js"></script>
+    <script src="..bootstrap/js/bootstrap-modal.js"></script>
+    <script src="..bootstrap/js/bootstrap-dropdown.js"></script>
+    <script src="..bootstrap/js/bootstrap-scrollspy.js"></script>
+    <script src="..bootstrap/js/bootstrap-tab.js"></script>
+    <script src="..bootstrap/js/bootstrap-tooltip.js"></script>
+    <script src="..bootstrap/js/bootstrap-popover.js"></script>
+    <script src="..bootstrap/js/bootstrap-button.js"></script>
+    <script src="..bootstrap/js/bootstrap-collapse.js"></script>
+    <script src="..bootstrap/js/bootstrap-carousel.js"></script>
+    <script src="..bootstrap/js/bootstrap-typeahead.js"></script>
+
+  </body>
+</html>

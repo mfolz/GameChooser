@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>NBA GameChooser</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="../static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="../static/favicon.png">
+  </head>
+
+  <body>
+
+    <div class="mainnav navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="../">GameChooser</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="../">Home</a></li>
+              <li><a href="../about">About</a></li>
+              <li><a href="../contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+	<div class="subnav navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<ul class="nav">
+					<li><a href="../view">Viewing recommendations</a></li>
+					<li><a href="../predict">GameChooser projections</a></li>
+					<li class="active"><a>GameChooser Team Rankings</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+  <div class="container">
+
+      <div class="hero-unit">
+		
+			<script>
+			$(document).ready(
+			
+			function(){
+				
+			$.getJSON('/teamdata', function(data){
+				var start_date = data['start_date'];
+				var end_date = data['end_date'];
+				var count = 1;
+				
+				var $table = $('<table/>');
+				var row = "<tr><td>Rank</td><td>Team</td><td>Record</td><td>Last 10 Games</td><td>Simulated Point Differential</td><td>Simulated Record</td></tr>"
+				
+				$table.append(row)
+				
+				$.each(data, function(index,value) {
+					if (value != start_date && value != end_date){
+				   	var row_prefix = "<tr>";
+				   	var row = "";
+					if (count<=10)
+					{				   
+						row += "<tr class='success'><td>"+count+"</td><td>"+value.team+"</td><td>"+value.record+"</td><td>"+value.L10+"</td><td>"+value.predict_point_diff.toFixed(2)+"</td><td>"+value.predict_record+"</td></tr>";
+					}
+					else if (count>10 && count<=20)
+					{
+						row += "<tr class='warning'><td>"+count+"</td><td>"+value.team+"</td><td>"+value.record+"</td><td>"+value.L10+"</td><td>"+value.predict_point_diff.toFixed(2)+"</td><td>"+value.predict_record+"</td></tr>";					
+					}
+					else if (count>20 && count<=30)
+					{
+						row += "<tr class='error'><td>"+count+"</td><td>"+value.team+"</td><td>"+value.record+"</td><td>"+value.L10+"</td><td>"+value.predict_point_diff.toFixed(2)+"</td><td>"+value.predict_record+"</td></tr>";					
+					}					
+					row +="</tr>";
+							
+					row = row_prefix+row;
+				   	$table.append(row);
+				   	count++;}
+				});
+				$table.addClass('table table-striped');
+				
+				//append table to the body
+				$('.hero-unit').append('<p class="lead">GameChooser Team Rankings for <b>'+start_date+'</b> to <b>'+end_date+':</b></p>') 
+				$('.hero-unit').append($table);
+				$('.hero-unit').append('<p><b>Methodology:</b> We simulate two games (one home, one away) between \
+				every pair of NBA teams at the beginning of this time period, \
+				and combine all of the results to obtain a ranking of all NBA teams for this time period. \
+				Teams are ranked according to their cumulative simulated point differential.</p>') 
+				});				
+				}
+				);	
+			</script>
+      </div>
+      <hr>
+
+      <footer>
+        <p>&copy; Matthew Folz, Insight Data Science, 2013.</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

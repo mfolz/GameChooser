@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>NBA GameChooser</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="../static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="../static/favicon.png">
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="../">GameChooser</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="../">Home</a></li>
+              <li class="active"><a href="#">About</a></li>
+              <li><a href="../contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="hero-unit">
+
+			<p>Overwhelmed by the 15 games playing on NBA League Pass tonight?  Stuck at work and 
+			want to choose a game to record on your DVR?  New to watching basketball and have no idea
+			what to watch?  <b>GameChooser</b> was made for you!</p>
+
+			<p><b>GameChooser</b> suggests the best NBA games to watch on a given night, based on the simple idea
+			that people:</p>		
+			<ol>
+			<li>like to watch their <b>favorite</b> teams,</li>
+			<li>prefer to watch <b>good</b> teams over <b>bad</b> teams,</li>
+			<li>prefer to watch <b>competitive</b> games,</li>
+			<li>prefer to watch <b>high-scoring</b> games</li>
+			</ol>	
+			<p>The end user provides the information for the first factor, the information for
+			the second factor is provided by checking the season standings, and the third 
+			and fourth factors are estimated by a <b>machine learning</b> model which predicts the 
+			outcome of all NBA games on a given night.  These factors 
+			are distilled into a measure of watchability called the <b>GameChooser Score</b>.
+			
+			<p>The <b>machine learning</b> model at the core of <b>GameChooser</b> uses 20 factors to predict 
+			the outcome of NBA games, and was trained on NBA games from 2006 onwards.  This model considers
+			win-loss records, point differentials, home-away splits, scheduling, and performance over trailing
+			time intervals of various length to assess the strength of a team at a given date.  It uses 
+			<b>random forest classifiers</b> to predict winners and estimate win probabilities, 
+			and <b>support vector regression</b> to estimate point differentials and predict the 
+			number of points scored for each team.  
+			
+			<p><b>Model Accuracy (classification):</b></p>
+			<table class="table">
+			<tr>
+			<td>Timeframe</td><td>Random Forest</td><td>Always pick home</td><td>Always pick better record</td>
+			</tr>
+			<tr>
+			<td>2006-2013 (n=4200)</td><td>69.1%</td><td>60.2%</td><td>66.9%</td>
+			</tr>
+			<tr>
+			<td>2012-2013 (n=700)</td><td>69.6%</td><td>60.4%</td><td>68.9%</td>
+			</tr>
+			</table>
+			
+			<p><b>Model Accuracy (regression):</b></p>
+			<table class="table">
+			<tr>
+			<td>Timeframe</td><td>Versus spread</td><td>Versus over/under</td>
+			</tr>
+			<tr>
+			<td>2006-2013 (n=4200)</td><td>51.9%</td><td>60.1%</td>
+			</tr>
+			<tr>
+			<td>2012-2013 (n=700)</td><td>53.6%</td><td>54.0%</td>
+			</tr>
+			</table>			
+						
+			<p>In addition to providing <b>intelligent viewing recommendations</b>, 
+			<b>GameChooser</b> predicts the outcome of all NBA games on a given night,
+			provides advice for betting the spread and over/under, and 
+			maintains a "Power Ranking" of NBA teams based on the game prediction model.</p>
+			
+			<p><b>GameChooser</b> is powered by <a href="http://www.python.org/"><b>Python</b></a> (<a href="http://pandas.pydata.org/">pandas</a>, <a href="http://www.numpy.org/">numpy</a>, <a href="http://www.scipy.org/">scipy</a>, <a href="http://scikit-learn.org/stable/">scikit-learn</a>, <a href="http://mysql-python.sourceforge.net/">mysql-python</a>, <a href="http://flask.pocoo.org/">flask</a>),
+			 <a href="http://www.mysql.com/"><b>MySQL</b></a>, <a href="http://twitter.github.io/bootstrap/"><b>Bootstrap</b></a>, and <a href="https://en.wikipedia.org/wiki/JavaScript"><b>Javascript</b></a> (<a href="http://jquery.com/">jQuery</a>), and is hosted on <a href="http://aws.amazon.com/"><b>Amazon AWS</b></a>. 
+      </div>
+      <hr>
+
+      <footer>
+        <p>&copy; Matthew Folz, Insight Data Science, 2013.</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>
