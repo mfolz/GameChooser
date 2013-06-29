@@ -1,3 +1,14 @@
+'''
+format_final.py
+Author: Matthew Folz
+Project: GameChooser
+
+This file takes in the .csv file output by combine.py, which has each game repeated twice,
+and outputs a .csv file with each of the games listed only once and the home team listed
+first.  The resulting file has all of the necessary information to predict game results,
+and is in a form suitable to be analyzed via scikit-learn.
+'''
+
 import sys
 import csv
 from pandas import *
@@ -10,13 +21,7 @@ def main():
 				'away_win_%','away_away_win_%','away_win_%_L10','away_win_%_L5',
 				'away_won_last','away_ppg','away_opp_ppg','away_away_ppg','away_away_opp_ppg',
 				'home_is_winner','point_diff','home_pts','away_pts',
-				'spread_size','over_under','home_record','away_record'])
-	
-	#date,home_team,away_team,is_b2b,ppg,home_ppg,away_ppg,home_opp_ppg,away_opp_ppg,win_%,(9)
-	#home_win_%,away_win_%,won_last,win_%_L5,win_%_L10,home_win,point_diff,home_pts,away_pts
-
-				
-	len_labels = len(labels)
+				'spread_size','over_under','home_record','away_record'])				
 
 	f = open('output_file.csv')
 	
@@ -24,9 +29,10 @@ def main():
 	final = [labels]
 	
 	for i in range(1,len(list_of_lines),2):
-		game=[0]*len_labels
+		game=[0]*len(labels)
 		home_ind = i
 		away_ind = i+1
+		
 		if float(list_of_lines[i][-2])<0.5: #if line i corresponds to away team instead
 			home_ind = i+1
 			away_ind = i			

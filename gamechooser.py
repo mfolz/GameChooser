@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+'''
+gamechooser.py
+Author: Matthew Folz
+Project: GameChooser
+
+This script runs flask and hosts gamechooser.
+'''
+
 import os
 from flask import Flask, url_for, render_template, session, request, redirect, jsonify
 import MySQLdb
@@ -137,6 +145,7 @@ def table():
 	final_date = formatted_date.strftime('%B %e, %Y')
 	date_for_url = formatted_date.strftime('%Y%m%d')
 
+	#get rows from MySQLdb
 	con = MySQLdb.connect(host='localhost', user='mfolz', passwd='abcd1234', db='2013_data')
 	cur = con.cursor()
 	cur.execute("""SELECT home_team,away_team,win_predict,prob_predict,spread_predict,
@@ -156,47 +165,45 @@ def table():
 
 	abbr_dict = team_abbr()
 
-	if len(all_games) == 0:
-		#print error message (there were no NBA games tonight)
-		True
-	else:
-		for game in all_games:
-			game_dict = {}
-			game_dict['home_team'] = game[0]
-			game_dict['away_team'] = game[1]
-			game_dict['home_team_abbr'] = abbr_dict[game[0]]
-			game_dict['away_team_abbr'] = abbr_dict[game[1]]			
-			game_dict['win_predict'] = game[2]
-			game_dict['prob_predict'] = game[3]
-			game_dict['spread_predict'] = -1.0*game[4]
-			game_dict['homescore_predict_round'] = round(game[5])
-			game_dict['awayscore_predict_round'] = round(game[6])
-			game_dict['homescore_predict'] = game[5]
-			game_dict['awayscore_predict'] = game[6]
-			game_dict['total_predict'] = game[13]
-			game_dict['tipoff_time'] = game[14]
-			
-			if round(game[5]) == round(game[6]):
-				if game[5] > game[6]:
-					game_dict['homescore_predict_round'] = round(game[5])+1
-				else:
-					game_dict['awayscore_predict_round'] = round(game[6])+1
-			
-			nwr,wr = watchability_rating(game[0], game[1], game[2],
-											game[3], game[4], game[5], game[6],
-											game[7], game[8], fav_teams,playing_today)
-			game_dict['norm_watchability_rating'] = round(100*nwr)
-			game_dict['watchability_rating']=round(100*wr)
-			
-			game_dict['home_WL'] = game[7]
-			game_dict['away_WL'] = game[8]
-			game_dict['home_record'] = game[9]
-			game_dict['away_record'] = game[10]
-			game_dict['spread_size'] = game[11]
-			game_dict['over_under'] = game[12]
-			
-			game_list.append(game_dict)
+	#load relevant information for each game into a dict
+	for game in all_games:
+		game_dict = {}
+		game_dict['home_team'] = game[0]
+		game_dict['away_team'] = game[1]
+		game_dict['home_team_abbr'] = abbr_dict[game[0]]
+		game_dict['away_team_abbr'] = abbr_dict[game[1]]			
+		game_dict['win_predict'] = game[2]
+		game_dict['prob_predict'] = game[3]
+		game_dict['spread_predict'] = -1.0*game[4]
+		game_dict['homescore_predict_round'] = round(game[5])
+		game_dict['awayscore_predict_round'] = round(game[6])
+		game_dict['homescore_predict'] = game[5]
+		game_dict['awayscore_predict'] = game[6]
+		game_dict['total_predict'] = game[13]
+		game_dict['tipoff_time'] = game[14]
+		
+		if round(game[5]) == round(game[6]):
+			if game[5] > game[6]:
+				game_dict['homescore_predict_round'] = round(game[5])+1
+			else:
+				game_dict['awayscore_predict_round'] = round(game[6])+1
+		
+		nwr,wr = watchability_rating(game[0], game[1], game[2],
+										game[3], game[4], game[5], game[6],
+										game[7], game[8], fav_teams,playing_today)
+		game_dict['norm_watchability_rating'] = round(100*nwr)
+		game_dict['watchability_rating']=round(100*wr)
+		
+		game_dict['home_WL'] = game[7]
+		game_dict['away_WL'] = game[8]
+		game_dict['home_record'] = game[9]
+		game_dict['away_record'] = game[10]
+		game_dict['spread_size'] = game[11]
+		game_dict['over_under'] = game[12]
+		
+		game_list.append(game_dict)
 
+	#sort list so best games appear on top
 	game_list = sorted(game_list,
 						key = lambda x:(x['watchability_rating'], game[7]+game[8]),
 						reverse = True)
@@ -224,11 +231,13 @@ def teamdata():
 
 	date =  session['date']
 
+	#list of week starts for team ranking
 	week_starts = (["2012-12-31","2013-01-07","2013-01-14","2013-01-21","2013-01-28",
 					"2013-02-04","2013-02-11","2013-02-25","2013-03-04","2013-03-11",
 					"2013-03-18","2013-03-25","2013-04-01","2013-04-08","2013-04-15",
 					"2013-04-18"])
 	
+	#parse dates and add end dates for team ranking
 	for i in range(len(week_starts)-1):
 		if date >= week_starts[i] and date < week_starts[i+1]:
 			str_date = week_starts[i]
@@ -238,7 +247,8 @@ def teamdata():
 							-datetime.timedelta(days = 1))
 			display_end_date = end_date.strftime('%B %e, %Y')
 			
-	
+
+	#get rows from MySQLdb	
 	con = MySQLdb.connect(host='localhost', user='mfolz', passwd='abcd1234', db='2013_data')
 	cur = con.cursor()
 	cur.execute("""SELECT team,record,L10,predict_point_diff,predict_record FROM powerrank 
@@ -247,7 +257,8 @@ def teamdata():
 	all_games = cur.fetchall()
 
 	game_list = []
-	
+
+	#load relevant information into a dict for each game
 	for game in all_games:
 		game_dict = {}
 		game_dict['team'] = game[0]

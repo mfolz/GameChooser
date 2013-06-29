@@ -1,3 +1,18 @@
+'''
+output_trained_results.py
+Author: Matthew Folz
+Project: GameChooser
+
+This file takes in the .csv files output by the script format_final.py, and builds a
+machine learning model to predict the outcome of all NBA games from January 1, 2013
+onwards (trained on 4000+ NBA games from before January 1, 2013).
+
+We use random forest classifiers to predict winners and win probabilities, and
+support vector regression to predict point spreads and points scored by each team.
+
+We output the predicted results to a new .csv file.
+'''
+
 import sys
 import csv
 from pandas import *
@@ -11,14 +26,14 @@ from sklearn import preprocessing
 def arrange_data():
 
 	df = DataFrame.from_csv(open('final.csv'))
-	
+
+	#load all games before January 1, 2013 (training set).	
 	X0_list = ([df[df.columns[2:22]][datetime(2006,12,15):datetime(2007,4,8)],
 					df[df.columns[2:22]][datetime(2007,12,15):datetime(2008,4,8)],
 					df[df.columns[2:22]][datetime(2008,12,15):datetime(2009,4,8)],
 					df[df.columns[2:22]][datetime(2009,12,15):datetime(2010,4,8)],
 					df[df.columns[2:22]][datetime(2010,12,15):datetime(2011,4,8)],
-					df[df.columns[2:22]][datetime(2012,12,15):datetime(2013,1,1)]])
-	
+					df[df.columns[2:22]][datetime(2012,12,15):datetime(2013,1,1)]])	
 	Y0_list = ([df[df.columns[22:28]][datetime(2006,12,15):datetime(2007,4,8)],
 					df[df.columns[22:28]][datetime(2007,12,15):datetime(2008,4,8)],
 					df[df.columns[22:28]][datetime(2008,12,15):datetime(2009,4,8)],
@@ -26,6 +41,7 @@ def arrange_data():
 					df[df.columns[22:28]][datetime(2010,12,15):datetime(2011,4,8)],
 					df[df.columns[22:28]][datetime(2012,12,15):datetime(2013,1,1)]])
 	
+	#games after January 1, 2013.
 	X1 = df[df.columns[2:22]][datetime(2013,1,1):datetime(2013,4,18)]
 	Y1 = df[df.columns[22:28]][datetime(2013,1,1):datetime(2013,4,18)]
 
@@ -87,11 +103,14 @@ def regress_spread_and_scores(X0,Y0,X1):
 	
 def main():
 
+	#put data in right form
 	X0,Y0,X1,Y1 = arrange_data()
 	
+	#get predictions
 	win_predict,prob_predict = predict_winners_and_probs(X0,Y0,X1)
 	spread_predict,homescore_predict,awayscore_predict,totalscore_predict = regress_spread_and_scores(X0,Y0,X1)
 	
+	#reshape data
 	win_predict = win_predict.reshape((len(win_predict),1))
 	prob_predict = prob_predict[:,1]
 	prob_predict = prob_predict.reshape((len(win_predict),1))
@@ -102,6 +121,7 @@ def main():
 
 	df = DataFrame.from_csv(open('final.csv'))
 
+	#build new dataframe, with columns for predicted values
 	df_selected = df[datetime(2013,1,1):datetime(2013,4,18)]
 	df_selected['win_predict'] = win_predict
 	df_selected['prob_predict'] = prob_predict

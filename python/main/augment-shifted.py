@@ -1,3 +1,13 @@
+'''
+augment-shifted.py
+Author: Matthew Folz
+Project: GameChooser
+
+This file takes in the .csv files output by the script scrape.py, which contains
+scores and spreads, and augments them with home/away splits, averages, win percentages,
+etc.  The output is saved to the original .csv files.
+'''
+
 import sys
 import csv
 from pandas import *
@@ -6,6 +16,7 @@ import glob
 		
 def main():
 
+	#input all files in directory
 	for filename in glob.glob("*.csv"):
 		file = open(filename)
 	
@@ -179,15 +190,13 @@ def main():
 		for i in range(1,col_len):
 			df['record'][i]=str(df['num_wins'][i-1])+"-"+str(df['game_number'][i-1]-df['num_wins'][i-1])
 
-	# should also do points L5/L10, points against L5/L10, etc...
-
 		labels = (['home_team','away_team','is_b2b','ppg','opp_ppg','home_ppg','away_ppg',
 					'home_opp_ppg','away_opp_ppg','win_%','home_win_%','away_win_%',
 					'won_last','win_%_L5','win_%_L10','home_win','point_diff','home_pts',
 					'away_pts','spread_size','over_under','is_home','record'])
 				
 		df_final = df[labels]
-	
+
 		df_final.to_csv(filename)
 	
 

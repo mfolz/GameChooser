@@ -1,3 +1,13 @@
+'''
+scrape.py
+Author: Matthew Folz
+Project: GameChooser
+
+This script scrapes all NBA game and betting results on covers.com 
+(using BeautifulSoup) from previous seasons,
+and outputs one .csv file for each (team,season) pair.
+'''
+
 import sys
 import urllib2
 import bs4
@@ -5,6 +15,7 @@ import csv
 
 def scrape_url(url,team):
 
+	#read into Beautiful Soup
 	html = urllib2.urlopen(url).read()
 	soup = bs4.BeautifulSoup(html)
 	
@@ -23,11 +34,13 @@ def scrape_url(url,team):
 		if opp_str.find("@") == -1:
 			home = 1
 		
+		#parse home teams
 		if home == 1:
 			opponent = opp_str[1:-1]
 		elif home == 0:
 			opponent = opp_str[opp_str.rfind("@")+2:-1]
-		
+
+		#parse wins/pushes/losses		
 		spread_size = 0
 		if str(raw_data[4]).rfind("W")!=-1:
 			win_spread = 1
@@ -45,8 +58,8 @@ def scrape_url(url,team):
 			win_spread = 0.5
 			spread_size = float(str(raw_data[4])[str(raw_data[4]).rfind("P")+2:])	
 
+		#parse over/under/push
 		over_under = 0
-		
 		if str(raw_data[5]).rfind("O")!=-1:
 			win_total = 1
 			over_under = float(str(raw_data[5])[str(raw_data[5]).rfind("O")+2:])
@@ -57,14 +70,12 @@ def scrape_url(url,team):
 			win_total = 0
 			over_under = float(str(raw_data[5])[str(raw_data[5]).rfind("U")+2:])	
 
-		
 		win_outright = 1
 		if str(raw_data[2]).rfind("W") == -1:
 			win_outright = 0
 
-
-		overtime = 0
-		
+		#check for OT games
+		overtime = 0		
 		score_str = str(raw_data[2])[str(raw_data[2]).rfind("  ")+1:].split("-")
 		if score_str[1].rfind("(") == -1:
 			own_score,opponent_score = int(score_str[0]),int(score_str[1])
@@ -75,7 +86,8 @@ def scrape_url(url,team):
 
 		total_score = own_score+opponent_score
 		
-		data = [date,home,team,opponent,spread_size,over_under,win_outright,win_spread,win_total,own_score,opponent_score,total_score,overtime]
+		data = ([date,home,team,opponent,spread_size,over_under,win_outright,win_spread,
+					win_total,own_score,opponent_score,total_score,overtime])
 		if str(raw_data[3])[-6:]=='Season' and overtime==0:
 			game_results.append(data)
 	
@@ -85,10 +97,12 @@ def scrape_url(url,team):
 		
 def main():
 
+	#list of labels for .csv
 	labels = (['date','is_home','team','opponent','spread_size','over_under','win_outright',
 				'win_spread','win_total','own_score','opponent_score','total_score',
 				'overtime'])
 
+	#list of NBA teams and team numbers on covers.com
 	team_num_dict = ({'Boston':'404169', 'Brooklyn':'404117', 'New York':'404288',
 						'Philadelphia':'404083','Toronto':'404330','Chicago':'404198',
 						'Cleveland':'404213','Detroit':'404153','Indiana':'404155',
@@ -103,6 +117,7 @@ def main():
 	url_prefix = "http://www.covers.com/pageLoader/pageLoader.aspx?page=/data/nba/teams/pastresults/"
 	year = [str(i)+"-"+str(i+1) for i in range(2006,2013)]		
 
+	#write a file for each (team,season) pair
 	for i,j in team_num_dict.iteritems():
 		for k in year:
 			output_filename = i+"_"+k+".csv"
