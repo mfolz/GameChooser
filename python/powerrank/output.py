@@ -1,11 +1,19 @@
+'''
+output.py
+Author: Matthew Folz
+Project: GameChooser
+
+This file takes in a list of .csv files containing the statistics for each NBA team at a 
+given date, and outputs (for each file) another .csv file containing all pairs of games
+(one home, one away) between the two teams.
+'''
+
 import sys
 import csv
 import datetime
 import glob
 
 def create_game(t1,t2): #create game with t1 as home team, t2 as away team
-	
-	#date,home_team,away_team,is_b2b,ppg,opp_ppg,home_ppg,away_ppg,home_opp_ppg,away_opp_ppg,win_%,home_win_%,away_win_%,won_last,win_%_L5,win_%_L10,home_win,point_diff,home_pts,away_pts,spread_size,over_under,is_home,record
 	
 	'''
 		labels=(['date','home_team','away_team','home_b2b','away_b2b',
@@ -16,6 +24,7 @@ def create_game(t1,t2): #create game with t1 as home team, t2 as away team
 				'home_is_winner','point_diff','home_pts','away_pts',
 				'spread_size','over_under','home_record','away_record'])
 	'''
+	
 	#initialize game
 	game=[0]*31
 	
@@ -56,28 +65,32 @@ def create_game(t1,t2): #create game with t1 as home team, t2 as away team
 			
 def main():
 	
+	#list of files containing team statistics on a given date
 	filenames = (['20121231.csv','20130107.csv','20130114.csv','20130121.csv',
 					'20130128.csv','20130204.csv','20130211.csv','20130225.csv',
 					'20130304.csv','20130311.csv','20130318.csv','20130325.csv',
 					'20130401.csv','20130408.csv','20130415.csv'])
 	
+	#create all pairs of games
 	for name in filenames:
 	
+		#read and format game string from .csv into a list
 		f = open(name,'r')	
 		lines = [[s.strip() for s in line[:-1].split(',')] for line in f.readlines()]
 	
 		gamelist = []
 		for t1 in lines:
 			for t2 in lines:
-				if t1!=t2 and t1<t2:				
+				if t1!=t2 and t1<t2:	
+					#one home game, one away game			
 					g1 = create_game(t1,t2)
 					g2 = create_game(t2,t1)
-				
 					gamelist.append(g1)
 					gamelist.append(g2)
 	
 		new_filename = name[:-4]+'-allgames.csv'
 	
+		#output each file to a new csv
 		output_file = csv.writer(open(new_filename,'wb'))
 		output_file.writerows(gamelist)
 				

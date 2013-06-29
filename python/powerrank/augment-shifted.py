@@ -1,3 +1,16 @@
+'''
+augment-shifted.py
+Author: Matthew Folz
+Project: GameChooser
+
+This file takes in the .csv files output by the script scrape.py, which contains
+scores and spreads, and augments them with home/away splits, averages, win percentages,
+etc.  The output is saved to the original .csv files.
+
+This file differs from the file augment-shifted.py in ../main in that it always sets
+is_b2b to 0, and leaves away_team blank.
+'''
+
 import sys
 import csv
 from pandas import *
@@ -168,8 +181,6 @@ def main():
 		df['record']='0-0'
 		for i in range(1,col_len):
 			df['record'][i]=str(df['num_wins'][i-1])+"-"+str(df['game_number'][i-1]-df['num_wins'][i-1])
-
-	# should also do points L5/L10, points against L5/L10, etc...
 
 		labels = (['home_team','away_team','is_b2b','ppg','opp_ppg','home_ppg','away_ppg',
 					'home_opp_ppg','away_opp_ppg','win_%','home_win_%','away_win_%',
