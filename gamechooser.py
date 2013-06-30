@@ -100,6 +100,14 @@ def home():
 def about():
     return render_template('about.html')
 
+@app.route('/source/')
+def source():
+    return render_template('source.html')
+
+@app.route('/slides/')
+def slides():
+    return render_template('slides.html')
+
 @app.route('/contact/')
 def contact():
     return render_template('contact.html')

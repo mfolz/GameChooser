@@ -16,8 +16,6 @@
       }
     </style>
     <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="../static/bootstrap/css/datepicker.css" rel="stylesheet">
-
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -29,7 +27,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
-    <link rel="shortcut icon" href="../static/favicon.png">                    
+    <link rel="shortcut icon" href="../static/favicon.png">
   </head>
 
   <body>
@@ -42,14 +40,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">GameChooser</a>
+          <a class="brand" href="../">GameChooser</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="about">About</a></li>
-              <li><a href="source">Source</a></li>
-              <li><a href="slides">Slides</a></li>
-              <li><a href="contact">Contact</a></li>
+              <li><a href="../">Home</a></li>
+              <li><a href="../about">About</a></li>
+              <li><a href="../source">Source</a></li>
+              <li class="active"><a href="#">Slides</a></li>
+              <li><a href="../contact">Contact</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -59,37 +57,8 @@
     <div class="container">
 
       <div class="hero-unit"><div class="text-center">
-        <h1>NBA GameChooser</h1>
-		<p></p>
-        <p>GameChooser uses machine learning, season statistics, and user preferences to identify the best NBA games to watch every night.  Never watch a boring game again!</p>
-		
-		<script src="http://code.jquery.com/jquery-1.10.1.js"></script>		
-		<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-        <script type="text/javascript" src="../static/bootstrap/js/bootstrap-datepicker.js"></script>
-		<script type='text/javascript'>
-			jQuery(function($){
-			$("#dp").datepicker({
-        		startDate: '2013-01-01',
-        		endDate: '2013-04-17',
-        		format: 'yyyy-mm-dd',
-        		autoclose: true});
-       		})
-		</script>
-		
-		 <form method="post" action="{{ url_for('results') }}">
-		  <fieldset>
-			<label>Date:</label>
-			<div class="input-append date" id="dp" data-date="2013-01-01" data-date-format="yyyy-mm-dd">
-			<input class="span2" size="16" name="user_date" type="text" value="2013-01-01" readonly>
-			<span class="add-on"><i class="icon-th"></i></span></div>			
-			<label>Favorite Team(s):</label>
-			<input type="text" name="user_teams" placeholder="example: Lakers, Warriors">
-			<span class="help-block"></span>
-			<button class="btn btn-primary">Find games</button>
-		  </fieldset>
-		</form>	
-      </div>
-      </div>
+		<iframe src="http://www.slideshare.net/slideshow/embed_code/23678147" width="476" height="400" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+      </div></div>
       <hr>
 
       <footer>
